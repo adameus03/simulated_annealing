@@ -60,6 +60,7 @@
     "stdio.h": "c",
     "cstdlib": "c",
     "cmath": "c",
-    "*.tcc": "c"
+    "*.tcc": "c",
+    "sa_r2_r_basic.h": "c"
   }
 }
