@@ -14,7 +14,7 @@ typedef enum { WORSE, STAY } SA_DECISION;
  * @param temperature Represents the current temperature value in the SA algorithm
  * @param metric Represents the metric used to calculate "distance" 
  * between the solution space objects. For real numbers, you can use |a-b|
- * @returns WORSE or STAY according to the random selection
+ * @returns WORSE or STAY according to the stochastic Boltzmann selection 
 */
 
 SA_DECISION sa_decide(const void* solutionMeasure, 
@@ -36,46 +36,54 @@ SA_DECISION sa_decide(const void* solutionMeasure,
 
 /**
  * @brief The core general function used to run the simulated annealing metaheuristic algorithm.
- * @param config Structure instance containing algorithm's initial conditions 
- * and iterations/epochs count
  * @param f The function to be optimized
- * @param emode Used to choose whether the algorithm shoud seek 
- * the minimum or maximum of the f function
- * @param neighbour A function that is able to select a neighbouring solution space object
- * in a stochastic way, dependent on the current temperature value
- * @param comparer A comparing function that is able to generate a CMP_RESULT comparision result 
- * based on the given argument solution space objects
- * @param metric A metric function that is able to give the algoritm an idea
- * of how far the 2 given objects are from each other in the solution object space
+ * @param config Structure instance containing algorithm's initial conditions and operation modes
+ * and iterations/epochs count
+ * @param domainConfig Structure instance containing f function's domain configuration for the algorithm
+ * @param codomainConfig Structure instance containing f function's codomain configuration for the algorithm
+ * @returns The best or the final solution from domain space, depending on the algorithm's memory configuration
 */
-void* sa_extreme(const sa_config_t config,
-                 const saFunc f, 
-                 const EXTREME_MODE emode, 
-                 const saFuncTDependent neighbour, 
-                 const saPredicate comparer,
-                 const saScalarFunc metric) {
+void* sa_extreme(const saFunc f,
+                 const sa_config_t config,
+                 const sa_domain_config_t domainConfig,
+                 const sa_codomain_config_t codomainConfig) {
     void* solution = config.guess;
     double temperature = config.temperature;
     void* solutionMeasure = f(solution);
 
+    void* bestSolution = solution;
+    void* bestSolutionMeasure = solutionMeasure;
+
     for (unsigned int epoch = 0; epoch < config.epochs; epoch++) {
         for (unsigned int iter = 0; iter < config.epoch_iters; iter++) {
             static void* candidate;
-            candidate = neighbour(solution, temperature);
+            candidate = domainConfig.neighbour(solution, temperature);
             static void* candidateMeasure;
             candidateMeasure = f(candidate);
 
             static CMP_RESULT comparerResult;
-            comparerResult = comparer(candidateMeasure, solutionMeasure);
-            if ((emode == MAX && comparerResult == LEFT)
-                || (emode == MIN && comparerResult == RIGHT)
-                || sa_decide(solutionMeasure, candidateMeasure, temperature, metric)
+            comparerResult = codomainConfig.comparer(candidateMeasure, solutionMeasure);
+            if ((config.emode == MAX && comparerResult == LEFT)
+                || (config.emode == MIN && comparerResult == RIGHT)
+                || sa_decide(solutionMeasure, candidateMeasure, temperature, codomainConfig.metric)
             ) {
                 solution = candidate;
                 solutionMeasure = candidateMeasure;
+                if (config.mem_mode == WITH_MEMORY
+                    && codomainConfig.comparer(solutionMeasure, bestSolutionMeasure) == LEFT) {
+                    bestSolution = solution;
+                    bestSolutionMeasure = solutionMeasure;
+                }
             }
         }
         temperature *= config.cooldown;
     }
-    return solution;
+    switch (config.mem_mode) {
+        case WITH_MEMORY:
+            return bestSolution;
+        case NO_MEMORY:
+            return solution;
+        default:
+            return NULL;
+    }
 }
