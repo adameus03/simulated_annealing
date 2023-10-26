@@ -1,1 +1,0 @@
-double sa_r2_r_extreme();
