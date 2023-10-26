@@ -19,12 +19,12 @@ typedef struct {
  * @param f The function to be optimized
  * @param emode Used to choose whether the algorithm shoud seek 
  * the minimum or maximum of the f function
- * @param neighbour A function that is able to select a neighbouring solution space object
+ * @param neighbour A function that should be able to select a neighbouring solution space object
  * in a stochastic way, dependent on the current temperature value
- * @param comparer A comparing function that is able to generate a CMP_RESULT comparision result 
- * based on the given argument solution space objects
- * @param metric A metric function that is able to give the algoritm an idea
- * of how far the 2 given objects are from each other in the solution object space
+ * @param comparer A comparing function that should be able to generate a CMP_RESULT comparison result 
+ * based on a given pair of f function codomain objects
+ * @param metric A metric function that should be able to give the algoritm an idea
+ * of how far the 2 given objects are from each other in the f function's codomain space
 */
 void* sa_extreme(const sa_config_t config,
                  const saFunc f, 
