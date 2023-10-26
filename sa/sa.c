@@ -1,4 +1,10 @@
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "sa.h"
+
+typedef enum { WORSE, STAY } SA_DECISION;
 
 /**
  * @brief Decides whether to accept a worse candidate or stay with the current solution.

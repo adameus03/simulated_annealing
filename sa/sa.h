@@ -1,11 +1,5 @@
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
 typedef enum { MAX, MIN } EXTREME_MODE;
 typedef enum { LEFT, RIGHT } CMP_RESULT;
-typedef enum { WORSE, STAY } SA_DECISION;
 typedef void* (*saFunc)(const void*);
 typedef void* (*saFuncTDependent)(const void*, const double);
 typedef double (*saScalarFunc)(const void*, const void*);
@@ -16,7 +10,6 @@ typedef struct {
     double cooldown;
     unsigned int epoch_iters;
     unsigned int epochs;
-
 } sa_config_t;
 
 /**
