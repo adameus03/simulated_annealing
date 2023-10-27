@@ -13,15 +13,13 @@ typedef double (*sa_R2RBasic_ScalarFunc)(const double, const double);
 typedef CMP_RESULT (*sa_R2RBasic_Predicate)(const double, const double);*/
 
 /**
- * @brief Run the simulated annealing metaheuristic algorithm for a R2->R function.
- * @param config Structure instance containing algorithm's initial conditions 
- * and iterations/epochs count
- * @param f The R2->R function to be optimized
- * @param emode Used to choose whether the algorithm shoud seek 
- * the minimum or maximum of the f function
+ * @brief Stochastic select of R2 neighbor, using a quadratic distribution 
+ * from points contained in the origin's surrounding circle. The circle size is temperature-dependent.
+ * @param r2Cart Structure containing the 2-dimensional cartesian coordinates of the origin point
+ * @param temperature The temperature control parameter for the selection
+ * @returns The R2 neighbor
 */
 void* neighbour(const void* r2Cart, const double temperature) {
-    //{{implement}}
     r2_cart_t* _r2Cart = (r2_cart_t*)r2Cart;
     static r2_cart_t* _neighR2Cart;
     _neighR2Cart = malloc(0x1);
@@ -47,14 +45,17 @@ double metric(const void* ra, const void* rb) {
     return fabs(*(double*)(rb) - *(double*)(ra));
 }
 
-double sa_r2_r_basic_extreme(const sa_config_t config,
-                       const saFunc f, 
-                       const EXTREME_MODE emode) {
-
-    return *(double*)sa_extreme(config, 
-                                f, 
-                                emode, 
-                                neighbour, 
-                                comparer, 
-                                metric);
+/**
+ * @brief Run the simulated annealing metaheuristic algorithm for a R2->R function.
+ * @param f The R2->R function to be optimized
+ * @param config Structure instance containing algorithm's initial conditions and operating modes,
+ * and iterations/epochs count
+*/
+double sa_r2_r_basic_extreme(const saFunc f, const sa_config_t config) {
+    sa_domain_config_t saDomainConfig;
+    saDomainConfig.neighbour = neighbour;
+    sa_codomain_config_t saCodomainConfig;
+    saCodomainConfig.comparer = comparer;
+    saCodomainConfig.metric = metric;
+    return *(double*)sa_extreme(f, config, saDomainConfig, saCodomainConfig);
 }
