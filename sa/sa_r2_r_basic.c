@@ -4,10 +4,6 @@
 #include <stdlib.h>
 #include "sa_r2_r_basic.h"
 
-typedef struct {
-    double x;
-    double y;
-} r2_cart_t;
 /*typedef r2_cart_t (*sa_R2RBasic_FuncTDependent)(const r2_cart_t, const double);
 typedef double (*sa_R2RBasic_ScalarFunc)(const double, const double);
 typedef CMP_RESULT (*sa_R2RBasic_Predicate)(const double, const double);*/
