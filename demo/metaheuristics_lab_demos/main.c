@@ -10,12 +10,17 @@ void ten_cones_demo() {
     saConfig.guess = (void*)&guess;
     saConfig.temperature = 1400;
     saConfig.cooldown = 0.999;
-    
+    saConfig.epochs = 100;
+    saConfig.epoch_iters = 1;
+    saConfig.mem_mode = WITH_MEMORY;
+
+    //double solution = sa_r2_r_basic_extreme()
+
 
 }
 
 void fakir_sin_demo() {
-    
+    //implement demo
 }
 
 int main() {
