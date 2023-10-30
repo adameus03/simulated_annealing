@@ -56,11 +56,9 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
+  "cmake.sourceDirectory": "/home/mundus/base/sem5/miz/simulated_annealing",
   "files.associations": {
-    "stdio.h": "c",
-    "cstdlib": "c",
-    "cmath": "c",
-    "*.tcc": "c",
-    "sa_r2_r_basic.h": "c"
+    "sa_r2_r_basic.h": "c",
+    "r2_r_example_functions.h": "c"
   }
 }

@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/mundus/base/sem5/miz/simulated_annealing/sa",
-      "program": "/home/mundus/base/sem5/miz/simulated_annealing/sa/build/Debug/outDebug",
+      "cwd": "/home/mundus/base/sem5/miz/simulated_annealing/demo/metaheuristics_lab_demos",
+      "program": "/home/mundus/base/sem5/miz/simulated_annealing/demo/metaheuristics_lab_demos/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
