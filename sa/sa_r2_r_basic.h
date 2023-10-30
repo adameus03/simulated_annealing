@@ -11,4 +11,4 @@ typedef struct {
  * @param config Structure instance containing algorithm's initial conditions and operating modes,
  * and iterations/epochs count
 */
-double sa_r2_r_basic_extreme(const saFunc f, const sa_config_t config);
+r2_cart_t sa_r2_r_basic_extreme(const saFunc f, const sa_config_t config);

@@ -47,11 +47,11 @@ double metric(const void* ra, const void* rb) {
  * @param config Structure instance containing algorithm's initial conditions and operating modes,
  * and iterations/epochs count
 */
-double sa_r2_r_basic_extreme(const saFunc f, const sa_config_t config) {
+r2_cart_t sa_r2_r_basic_extreme(const saFunc f, const sa_config_t config) {
     sa_domain_config_t saDomainConfig;
     saDomainConfig.neighbour = neighbour;
     sa_codomain_config_t saCodomainConfig;
     saCodomainConfig.comparer = comparer;
     saCodomainConfig.metric = metric;
-    return *(double*)sa_extreme(f, config, saDomainConfig, saCodomainConfig);
+    return *(r2_cart_t*)sa_extreme(f, config, saDomainConfig, saCodomainConfig);
 }
