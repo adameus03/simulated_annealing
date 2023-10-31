@@ -1,3 +1,5 @@
+//#define sa_type(domainType, codomainType);
+
 typedef enum { MAX, MIN } EXTREME_MODE;
 typedef enum { NO_MEMORY, WITH_MEMORY } MEMORY_MODE;
 typedef enum { LEFT, RIGHT } CMP_RESULT;
@@ -33,6 +35,7 @@ typedef struct {
     /* A function that should be able to select a neighbouring solution space object
        in a stochastic way, dependent on the current temperature value */
     saFuncTDependent neighbour;
+    //size_t extent;
 } sa_domain_config_t;
 /**
  * Structure instance containing the optimized function's codomain configuration for the algorithm
@@ -44,6 +47,7 @@ typedef struct {
     /* A metric function that should be able to give the algoritm an idea
        of how far the 2 given objects are from each other in the optimized function's codomain space */
     saScalarFunc metric;
+    //size_t extent;
 } sa_codomain_config_t;
 
 /**
@@ -59,3 +63,30 @@ void* sa_extreme(const saFunc f,
                  const sa_config_t config,
                  const sa_domain_config_t domainConfig,
                  const sa_codomain_config_t codomainConfig);
+
+
+typedef struct {
+    unsigned char* blobDomainPtr;
+    unsigned char* blobCodomainPtr;
+    //size_t blobUnitSize;
+    unsigned long domainExtent;
+    unsigned long codomainExtent;
+} _blob;
+_blob _blob_loc(const _blob* blob);
+
+/**
+ * @brief Macro for setting domain & codomain types for the simualted annealing algorithm
+ * @param domainType Optimized function domain datatype
+ * @param codomainType Optimized function codomain datatype
+*/
+#define sa_type(domainType, codomainType) ({ \
+    static unsigned char domainStorage[sizeof(domainType) << 1]; \
+    static unsigned char codomainStorage[sizeof(domainType) << 1]; \
+    static _blob blob; \
+    blob.blobDomainPtr = domainStorage; \
+    blob.blobCodomainPtr = codomainStorage; \
+    blob.domainExtent = sizeof(domainType); \
+    blob.codomainExtent = sizeof(codomainType); \
+    _blob_loc(&blob); \
+    printf("In macro\n"); \
+})
