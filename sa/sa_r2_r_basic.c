@@ -20,6 +20,17 @@ r2_cart_rect_constraint_t _constraint(const r2_cart_rect_constraint_t* constrain
     }
 }
 
+/* wrap x -> [0,max) */
+double wrapMax(double x, double max)
+{
+    return fmodl(max + fmodl(x, max), max);
+}
+/* wrap x -> [min,max) */
+double wrapMinMax(double x, double min, double max)
+{
+    return min + wrapMax(x - min, max - min);
+}
+
 /**
  * @brief Stochastic select of R2 neighbor, using a quadratic distribution 
  * from points contained in the origin's surrounding circle. The circle size is temperature-dependent.
@@ -33,7 +44,8 @@ void* neighbour(const void* r2Cart, const double temperature) {
     static r2_cart_t _neighR2Cart;
     static double distance;
     srand((unsigned int)time(NULL));
-    distance = 2/*10*//*0.5*//*0.39*/ * temperature * (double)rand() / RAND_MAX;
+    //distance = /*0.1*//*0.5*//*1*//*2*//*10*//*0.5*/0.39 * temperature * ((double)rand() / RAND_MAX);
+    distance = ((double)rand() / RAND_MAX) * temperature;
     static double dirAngle;
     dirAngle = 2 * M_PI * (double)rand() / RAND_MAX;
     _neighR2Cart.x = _r2Cart->x;
@@ -43,18 +55,9 @@ void* neighbour(const void* r2Cart, const double temperature) {
 
     static r2_cart_rect_constraint_t constraint;
     constraint = _constraint(NULL);
-    if (_neighR2Cart.x < constraint.xMin) {
-        _neighR2Cart.x += constraint.xMax - constraint.xMin;
-    }
-    else if (_neighR2Cart.x > constraint.xMax) {
-        _neighR2Cart.x -= constraint.xMax - constraint.xMin;
-    }
-    if (_neighR2Cart.y < constraint.yMin) {
-        _neighR2Cart.y += constraint.yMax - constraint.yMin;
-    }
-    else if (_neighR2Cart.y > constraint.yMax) {
-        _neighR2Cart.y -= constraint.yMax - constraint.yMin;
-    }
+
+    _neighR2Cart.x = wrapMinMax(_neighR2Cart.x, constraint.xMin, constraint.xMax);
+    _neighR2Cart.y = wrapMinMax(_neighR2Cart.y, constraint.yMin, constraint.yMax);
     
     return (void*)&_neighR2Cart;
 }
@@ -84,15 +87,6 @@ r2_cart_t sa_r2_r_basic_extreme(const saFunc f,
     sa_codomain_config_t saCodomainConfig;
     saCodomainConfig.comparer = comparer;
     saCodomainConfig.metric = metric;
-
-    ///<test>
-    //-293.8926 404.5085
-    r2_cart_t temp;
-    temp.x = -293.8926;
-    temp.y = 404.5085;
-    double val = *(double*)f(&temp);
-    printf("f(-293.8926, 404.5085) = %2.4f\n", val);
-    ///</test>
 
     sa_type(r2_cart_t, double);
     _constraint(&constraint);

@@ -18,6 +18,8 @@ typedef struct {
     double temperature;
     /* The cooldown coefficient used to decrease the temperature */
     double cooldown;
+    /* The algorithmic Boltzmann k constant */
+    double boltzmann_k;
     /* Number of iterations per epochs */
     unsigned int epoch_iters;
     /* Number of epochs for the algorithm to run */
@@ -88,5 +90,4 @@ _blob _blob_loc(const _blob* blob);
     blob.domainExtent = sizeof(domainType); \
     blob.codomainExtent = sizeof(codomainType); \
     _blob_loc(&blob); \
-    printf("In macro\n"); \
 })

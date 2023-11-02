@@ -46,3 +46,15 @@ double fakir_sin(const double x, const double y) {
             + x * sin(4 * M_PI * x) 
             + y * sin(20 * M_PI * y);
 }
+
+double oh_my_cosh(const double x, const double y) {
+    const double xp12 = x + 12;
+    const double yp12 = y + 12;
+    const double ym12 = y - 12;
+    const double cxm12 = cosh(x - 12);
+    const double cyp12 = cosh(yp12); 
+    return 8 * exp(-xp12*xp12 - yp12*yp12) 
+    + 9 / (1 + xp12*xp12 + ym12*ym12) 
+    + 20 / (cxm12*cxm12 + cyp12*cyp12) 
+    + 176 / ((exp(x - 12) + 2 + exp(-x + 12)) * (exp(y - 12) + 2 + exp(-y + 12)));
+}
