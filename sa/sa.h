@@ -51,6 +51,14 @@ typedef struct {
     saScalarFunc metric;
     //size_t extent;
 } sa_codomain_config_t;
+/**
+ * Structure instance containing statistics for the simulated annealing algorithm runtime
+*/
+typedef struct {
+    unsigned long int solution_improved_times;
+    unsigned long int solution_worsened_times;
+    unsigned long int best_solution_updated_times;
+} sa_stat_t;
 
 /**
  * @brief The core general function used to run the simulated annealing metaheuristic algorithm.
@@ -66,6 +74,10 @@ void* sa_extreme(const saFunc f,
                  const sa_domain_config_t domainConfig,
                  const sa_codomain_config_t codomainConfig);
 
+/**
+ * @brief Get simulated annealing algorithm runtime statistics
+*/
+sa_stat_t get_sa_stat();
 
 typedef struct {
     unsigned char* blobDomainPtr;

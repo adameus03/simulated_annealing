@@ -96,6 +96,32 @@ void _random_guard() {
     }
 }
 
+typedef enum { _INC_SP, _INC_SM, _INC_SB, _RESET, _RET } _statOperation;
+sa_stat_t* _sa_stat(const _statOperation statOperation) {
+    static sa_stat_t saStat;
+    switch (statOperation) {
+        case _INC_SP:
+            saStat.solution_improved_times++;
+            return NULL;
+        case _INC_SM:
+            saStat.solution_worsened_times++;
+            return NULL;
+        case _INC_SB:
+            saStat.best_solution_updated_times++;
+            return NULL;
+        case _RESET:
+            saStat.solution_improved_times = 0;
+            saStat.solution_worsened_times = 0;
+            saStat.best_solution_updated_times = 0;
+            return NULL;
+        case _RET:
+            return &saStat;
+        default:
+            return NULL;
+        
+    }
+}
+
 /**
  * @brief The core general function used to run the simulated annealing metaheuristic algorithm.
  * @param f The function to be optimized
@@ -133,10 +159,10 @@ void* sa_extreme(const saFunc f,
 
             if ((config.emode == MAX && comparerResult == LEFT)
                 || (config.emode == MIN && comparerResult == RIGHT)
-                || (sa_decide(solutionMeasure, candidateMeasure, temperature, config.boltzmann_k, codomainConfig.metric) == WORSE)
             ) {
                 _blob_write(candidate, _S);
                 _blob_write(candidateMeasure, _SM);
+                _sa_stat(_INC_SP);
                 if (config.mem_mode == WITH_MEMORY) {
                     comparerResult = codomainConfig.comparer(solutionMeasure, bestSolutionMeasure);
                     if ((config.emode == MAX && comparerResult == LEFT)
@@ -144,8 +170,14 @@ void* sa_extreme(const saFunc f,
                     ) {
                         _blob_write(solution, _BS);
                         _blob_write(solutionMeasure, _BSM);
+                        _sa_stat(_INC_SB);
                     }
                 }
+            }
+            else if (sa_decide(solutionMeasure, candidateMeasure, temperature, config.boltzmann_k, codomainConfig.metric) == WORSE) {
+                _blob_write(candidate, _S);
+                _blob_write(candidateMeasure, _SM);
+                _sa_stat(_INC_SM);
             }
         }
         temperature *= config.cooldown;
@@ -159,4 +191,8 @@ void* sa_extreme(const saFunc f,
         default:
             return NULL;
     }
+}
+
+sa_stat_t get_sa_stat() {
+    return *_sa_stat(_RET);
 }

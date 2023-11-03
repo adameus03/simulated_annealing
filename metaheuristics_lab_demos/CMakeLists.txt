@@ -9,7 +9,7 @@ project(simulated_annealing_metaheuristics_lab_demos VERSION 0.1.0 LANGUAGES C)
 # add_subdirectory(testDir)
 
 
-add_executable(simulated_annealing_metaheuristics_lab_demos main.c)
+add_executable(simulated_annealing_metaheuristics_lab_demos main.c batch.c)
 
 target_link_libraries(${PROJECT_NAME}
     sub::sa
