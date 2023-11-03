@@ -25,7 +25,6 @@ SA_DECISION sa_decide(const void* solutionMeasure,
     static double probabilityWorse;
     double metricValue = metric(solutionMeasure, candidateMeasure);
     probabilityWorse = exp(- metricValue / (k * temperature));
-    srand((unsigned int)time(NULL));
     double randomValue = (double)rand() / RAND_MAX;
     if (randomValue < probabilityWorse) {
         return WORSE;
@@ -94,6 +93,22 @@ void _blob_write(const void* dataPtr, const _blobID blobId) {
     _blob_access(dataPtr, blobId, _WRITE);
 }
 
+void _random_guard() {
+    static unsigned char guard = 0x1;
+    if (guard) {
+        guard = 0x0;
+        srand((unsigned int)time(NULL));   
+    }
+}
+
+
+///<debug>
+typedef struct {
+    double x;
+    double y;
+} r2_cart_t;
+///</debug>
+
 /**
  * @brief The core general function used to run the simulated annealing metaheuristic algorithm.
  * @param f The function to be optimized
@@ -107,6 +122,7 @@ void* sa_extreme(const saFunc f,
                  const sa_config_t config,
                  const sa_domain_config_t domainConfig,
                  const sa_codomain_config_t codomainConfig) { //posible to rewrite using a typed macro
+    _random_guard();
     _blob_write(config.guess, _S);
     void* solution = _blob_read(_S); // {{instead return address from _blob_write and remove _blob_read? (cuts no of lines in half)}}
     _blob_write(f(solution), _SM);
@@ -118,14 +134,22 @@ void* sa_extreme(const saFunc f,
     void* bestSolutionMeasure = _blob_read(_BSM);    
 
     for (unsigned int epoch = 0; epoch < config.epochs; epoch++) {
-        printf("[%d / %d] T: %4.4f solutionMeasure: %4.2f; bestSolutionMeasure: %4.2f\n", epoch, config.epochs, temperature, *(double*)solutionMeasure, *(double*)bestSolutionMeasure);
+        printf("[%d / %d] T: %4.4f solutionMeasure: %4.4f; bestSolutionMeasure: %4.4f\n", epoch, config.epochs, temperature, *(double*)solutionMeasure, *(double*)bestSolutionMeasure);
         for (unsigned int iter = 0; iter < config.epoch_iters; iter++) {
             static void* candidate;
             candidate = domainConfig.neighbour(solution, temperature);
+
             static void* candidateMeasure;
             candidateMeasure = f(candidate);
+
+            //printf("{Probe %d/%d}\n", iter, config.epoch_iters); //debug
+            //printf("Candidate: x=%4.3f, y=%4.3f  ==> %4.4f\n", ((r2_cart_t*)candidate)->x, ((r2_cart_t*)candidate)->y, *(double*)candidateMeasure);//debug
+            //printf("Current solution: x=%4.3f, y=%4.3f ==> %4.4f\n", ((r2_cart_t*)solution)->x, ((r2_cart_t*)solution)->y, *(double*)solutionMeasure);
+            //printf("Current bestSolution: x=%4.3f, y=%4.3f ==> %4.4f\n", ((r2_cart_t*)bestSolution)->x, ((r2_cart_t*)bestSolution)->y, *(double*)bestSolutionMeasure);
+
             static CMP_RESULT comparerResult;
             comparerResult = codomainConfig.comparer(candidateMeasure, solutionMeasure);
+
             if ((config.emode == MAX && comparerResult == LEFT)
                 || (config.emode == MIN && comparerResult == RIGHT)
                 || (sa_decide(solutionMeasure, candidateMeasure, temperature, config.boltzmann_k, codomainConfig.metric) == WORSE)
@@ -145,6 +169,10 @@ void* sa_extreme(const saFunc f,
         }
         temperature *= config.cooldown;
     }
+    
+    /*for(int i=0; i<10; i++){
+        printf("%4.2f\n", ((double)rand())/RAND_MAX*5); //>>>> ?????
+    }*/
     switch (config.mem_mode) {
         case WITH_MEMORY:
             return bestSolution;

@@ -1,6 +1,5 @@
 #define __USE_MISC
 #include <math.h>
-#include <time.h>
 #include <stdlib.h>
 #include "sa_r2_r_basic.h"
 #include <stdio.h> //debug
@@ -40,14 +39,12 @@ double wrapMinMax(double x, double min, double max)
 */
 void* neighbour(const void* r2Cart, const double temperature) {
     r2_cart_t* _r2Cart = (r2_cart_t*)r2Cart;
-    //printf("Temperature: %4.2f; X: %4.2f; Y: %4.2f\n", temperature, _r2Cart->x, _r2Cart->y);
     static r2_cart_t _neighR2Cart;
     static double distance;
-    srand((unsigned int)time(NULL));
-    //distance = /*0.1*//*0.5*//*1*//*2*//*10*//*0.5*/0.39 * temperature * ((double)rand() / RAND_MAX);
-    distance = ((double)rand() / RAND_MAX) * temperature;
+    distance = temperature * ((double)rand())/RAND_MAX;
     static double dirAngle;
-    dirAngle = 2 * M_PI * (double)rand() / RAND_MAX;
+    dirAngle = 2 * M_PI * ((double)rand())/RAND_MAX;
+
     _neighR2Cart.x = _r2Cart->x;
     _neighR2Cart.y = _r2Cart->y;
     _neighR2Cart.x += distance * cos(dirAngle);
