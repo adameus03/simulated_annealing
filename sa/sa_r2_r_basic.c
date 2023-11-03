@@ -2,11 +2,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include "sa_r2_r_basic.h"
-#include <stdio.h> //debug
-
-/*typedef r2_cart_t (*sa_R2RBasic_FuncTDependent)(const r2_cart_t, const double);
-typedef double (*sa_R2RBasic_ScalarFunc)(const double, const double);
-typedef CMP_RESULT (*sa_R2RBasic_Predicate)(const double, const double);*/
 
 r2_cart_rect_constraint_t _constraint(const r2_cart_rect_constraint_t* constraintPtr) {
     static r2_cart_rect_constraint_t constraint;

@@ -36,10 +36,10 @@ void fakir_sin_demo() {
     constraint.yMax = 5.8;
 
     r2_cart_t solution = sa_r2_r_basic_extreme(_fakir_sin, saConfig, constraint);
-    puts("=========== Fakir sin global extreme obtained ===========");
+    puts("\n=========== Fakir sin global extreme obtained ===========");
     printf("Solution X: %4.2f\n", solution.x);
     printf("Solution Y: %4.2f\n", solution.y);
-    printf("Extreme value: %4.5f", fakir_sin(solution.x, solution.y));
+    printf("Extreme value: %4.5f\n\n", fakir_sin(solution.x, solution.y));
 }
 
 void oh_my_cosh_demo() {
@@ -64,49 +64,14 @@ void oh_my_cosh_demo() {
     constraint.yMax = 15.0;
 
     r2_cart_t solution = sa_r2_r_basic_extreme(_oh_my_cosh, saConfig, constraint);
-    puts("=========== Oh my cosh global extreme obtained ===========");
+    puts("\n=========== Oh my cosh global extreme obtained ===========");
     printf("Solution X: %4.5f\n", solution.x);
     printf("Solution Y: %4.5f\n", solution.y);
-    printf("Extreme value: %4.5f", oh_my_cosh(solution.x, solution.y));
+    printf("Extreme value: %4.5f\n", oh_my_cosh(solution.x, solution.y));
 }
 
-//#include <time.h>
-//#include <stdlib.h>
 int main() {
     fakir_sin_demo();
     oh_my_cosh_demo();
     return 0;
 }
-
-/*void* _ten_cones(const void* arg) {
-    static double output = 2137;
-    output = ten_cones(((r2_cart_t*)arg)->x, ((r2_cart_t*)arg)->y);
-    return &output;
-}
-
-void ten_cones_demo() {
-    r2_cart_t guess;
-    guess.x = 0;
-    guess.y = 0;
-
-    sa_config_t saConfig;
-    saConfig.guess = (void*)&guess;
-    saConfig.temperature = 1400;
-    saConfig.cooldown = 0.999;
-    saConfig.boltzmann_k = 0.1;
-    saConfig.epochs = 100;
-    saConfig.epoch_iters = 1000;
-    saConfig.mem_mode = WITH_MEMORY;
-    saConfig.emode = MAX;
-
-    r2_cart_rect_constraint_t constraint;
-    constraint.xMin = -550.0;
-    constraint.xMax = 550.0;
-    constraint.yMin = -550.0;
-    constraint.yMax = 550.0;
-
-    r2_cart_t solution = sa_r2_r_basic_extreme(_ten_cones, saConfig, constraint);
-    printf("Solution X: %4.2f\n", solution.x);
-    printf("Solution Y: %4.2f\n", solution.y);
-    
-}*/

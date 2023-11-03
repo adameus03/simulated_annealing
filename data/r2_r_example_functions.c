@@ -1,18 +1,24 @@
 #define __USE_MISC
 #include <math.h>
 
-/*
-    1 0.0000   500.0000   10
-    2 293.8926 404.5085    9
-    3 475.5283 154.5085    8
-    4 475.5283 -154.5085   7
-    5 293.8926 -404.5085   6
-    6 0.0000     -500.0000 5
-    7 -293.8926  -404.5085 4
-    8 -475.5283  -154.5085 3
-    9 -475.5283  154.5085  2
-    10 -293.8926 404.5085  1
-*/
+double fakir_sin(const double x, const double y) {
+    return 21.5 
+            + x * sin(4 * M_PI * x) 
+            + y * sin(20 * M_PI * y);
+}
+
+double oh_my_cosh(const double x, const double y) {
+    const double xp12 = x + 12;
+    const double yp12 = y + 12;
+    const double ym12 = y - 12;
+    const double cxm12 = cosh(x - 12);
+    const double cyp12 = cosh(yp12); 
+    return 8 * exp(-xp12*xp12 - yp12*yp12) 
+    + 9 / (1 + xp12*xp12 + ym12*ym12) 
+    + 20 / (cxm12*cxm12 + cyp12*cyp12) 
+    + 176 / ((exp(x - 12) + 2 + exp(-x + 12)) * (exp(y - 12) + 2 + exp(-y + 12)));
+}
+
 double ten_cones(const double x, const double y) {
     static const double conesX[10] = {
         0.0000, 293.8926, 475.5283, 475.5283, 293.8926, 
@@ -39,22 +45,4 @@ double ten_cones(const double x, const double y) {
         }
     }
     return 0;
-}
-
-double fakir_sin(const double x, const double y) {
-    return 21.5 
-            + x * sin(4 * M_PI * x) 
-            + y * sin(20 * M_PI * y);
-}
-
-double oh_my_cosh(const double x, const double y) {
-    const double xp12 = x + 12;
-    const double yp12 = y + 12;
-    const double ym12 = y - 12;
-    const double cxm12 = cosh(x - 12);
-    const double cyp12 = cosh(yp12); 
-    return 8 * exp(-xp12*xp12 - yp12*yp12) 
-    + 9 / (1 + xp12*xp12 + ym12*ym12) 
-    + 20 / (cxm12*cxm12 + cyp12*cyp12) 
-    + 176 / ((exp(x - 12) + 2 + exp(-x + 12)) * (exp(y - 12) + 2 + exp(-y + 12)));
 }
