@@ -67,7 +67,7 @@ void oh_my_cosh_demo() {
     puts("\n=========== Oh my cosh global extreme obtained ===========");
     printf("Solution X: %4.5f\n", solution.x);
     printf("Solution Y: %4.5f\n", solution.y);
-    printf("Extreme value: %4.5f\n", oh_my_cosh(solution.x, solution.y));
+    printf("Extreme value: %4.5f\n\n", oh_my_cosh(solution.x, solution.y));
 }
 
 int main() {
