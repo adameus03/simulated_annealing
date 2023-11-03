@@ -3,13 +3,13 @@
 #include <stdio.h>
 
 void* _fakir_sin(const void* arg) {
-    static double output = 2137;
+    static double output;
     output = fakir_sin(((r2_cart_t*)arg)->x, ((r2_cart_t*)arg)->y);
     return &output;
 }
 
 void* _oh_my_cosh(const void* arg) {
-    static double output = 2137;
+    static double output;
     output = oh_my_cosh(((r2_cart_t*)arg)->x, ((r2_cart_t*)arg)->y);
     return &output;
 }
