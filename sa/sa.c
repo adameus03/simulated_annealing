@@ -136,6 +136,7 @@ void* sa_extreme(const saFunc f,
                  const sa_domain_config_t domainConfig,
                  const sa_codomain_config_t codomainConfig) { //posible to rewrite using a typed macro
     _random_guard();
+    _sa_stat(_RESET);
     _blob_write(config.guess, _S);
     void* solution = _blob_read(_S); // {{instead return address from _blob_write and remove _blob_read? (cuts no of lines in half)}}
     _blob_write(f(solution), _SM);
