@@ -35,12 +35,6 @@ void fakir_sin_demo() {
     constraint.yMin = 4.1;
     constraint.yMax = 5.8;
 
-    /*r2_cart_t solution = sa_r2_r_basic_extreme(_fakir_sin, saConfig, constraint);
-    puts("\n=========== Fakir sin global extreme obtained ===========");
-    printf("Solution X: %4.2f\n", solution.x);
-    printf("Solution Y: %4.2f\n", solution.y);
-    printf("Extreme value: %4.5f\n\n", fakir_sin(solution.x, solution.y));*/
-
     batch("Fakir sine", 1000, _fakir_sin, saConfig, constraint, QUIET);
 
 }
@@ -65,12 +59,6 @@ void oh_my_cosh_demo() {
     constraint.xMax = 15.0;
     constraint.yMin = -15.0;
     constraint.yMax = 15.0;
-
-    /*r2_cart_t solution = sa_r2_r_basic_extreme(_oh_my_cosh, saConfig, constraint);
-    puts("\n=========== Oh my cosh global extreme obtained ===========");
-    printf("Solution X: %4.5f\n", solution.x);
-    printf("Solution Y: %4.5f\n", solution.y);
-    printf("Extreme value: %4.5f\n\n", oh_my_cosh(solution.x, solution.y));*/
 
     batch("Oh my cosh", 1000, _oh_my_cosh, saConfig, constraint, QUIET);
 }
